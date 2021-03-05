@@ -10,6 +10,35 @@ const container = document.querySelector('.todo__list');
 const todoForm = document.querySelector('.todo__form');
 const templateElement = document.querySelector('.template');
 
+function deleteTaskHandler(evt) {
+    const target = evt.target;
+    const currentTask = target.closest('.task');
+
+    currentTask.remove();
+}
+
+function duplicateTaskHandler(evt) {
+    const target = evt.target;
+    const currentTask = target.closest('.task');
+
+    //создать новую дом ноду задачи, передав найденный текст
+    const newTask = currentTask.cloneNode(true);
+
+    //навесить на новую задачу обработчики события
+    addTaskListeners(newTask)
+
+    //вставить на страницу
+    container.prepend(newTask);
+}
+
+function addTaskListeners(task) {
+    const deleteButton = task.querySelector('.task__btn_delete');
+    deleteButton.addEventListener('click', deleteTaskHandler);
+
+    const duplicateButton = task.querySelector('.task__btn_copy');
+    duplicateButton.addEventListener('click', duplicateTaskHandler)
+}
+
 function createTaskDomNode(item) {
     const newItem = templateElement.content.cloneNode(true);
     const title = newItem.querySelector('.task__name');
@@ -20,7 +49,11 @@ function createTaskDomNode(item) {
 }
 
 function renderList() {
-    const result = TODO_LIST.map(createTaskDomNode)
+    const result = TODO_LIST.map(function(item) {
+        const newTask = createTaskDomNode(item);
+        addTaskListeners(newTask);
+        return newTask;
+    })
 
     container.append(...result);
 }
@@ -31,6 +64,9 @@ function addTaskFormListener(evt) {
     const inputTitle = input.value;
 
     const newTask = createTaskDomNode({ title: inputTitle });
+
+    addTaskListeners(newTask);
+
     container.prepend(newTask);
 
     input.value = '';
