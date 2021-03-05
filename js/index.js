@@ -39,11 +39,8 @@ function renderList() {
     container.append(...result);
 }
 
-function addTaskForListener() {
 
-}
-
-function addTaskForListener(evt) {
+function addTaskFormListener(evt) {
     evt.preventDefault();
     const input = document.querySelector('.todo__input');
     const inputTitle = input.value;
@@ -55,4 +52,4 @@ function addTaskForListener(evt) {
 }
 
 renderList();
-todoForm.addEventListener('submit', addTaskForListener);
+todoForm.addEventListener('submit', addTaskFormListener);
