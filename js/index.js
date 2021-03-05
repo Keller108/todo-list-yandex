@@ -8,44 +8,29 @@ const TODO_LIST = [
 
 const container = document.querySelector('.todo__list');
 const todoForm = document.querySelector('.todo__form');
+const templateElement = document.querySelector('.template');
 
-function createTaskMarkUp(item) {
-    const markUp = `
-		<li class="todo__item task">
-			<div class="task__info">
-				<p class="task__name"></p>
-			</div>
-			<div class="task__controls">
-				<button class="task__btn task__btn_copy" type="button"><img src="./images/duplicate-icon.svg" width="25" height="25" alt="Копировать"></button>
-				<button class="task__btn task__btn_delete" type="button"><img src="./images/delete-icon.svg" width="18" height="17" alt="Удалить"></button>
-			</div>
-		</li>
-	`;
+function createTaskDomNode(item) {
+    const newItem = templateElement.content.cloneNode(true);
+    const title = newItem.querySelector('.task__name');
 
-    const tempContainer = document.createElement('div');
-    tempContainer.insertAdjacentHTML('afterbegin', markUp);
+    title.textContent = item.title;
 
-    const newTaskNode = tempContainer.firstElementChild;
-    newTaskNode.querySelector('.task__name').textContent = item.title;
-
-    return newTaskNode;
+    return newItem;
 }
 
-
-
 function renderList() {
-    const result = TODO_LIST.map(createTaskMarkUp)
+    const result = TODO_LIST.map(createTaskDomNode)
 
     container.append(...result);
 }
-
 
 function addTaskFormListener(evt) {
     evt.preventDefault();
     const input = document.querySelector('.todo__input');
     const inputTitle = input.value;
 
-    const newTask = createTaskMarkUp({ title: inputTitle });
+    const newTask = createTaskDomNode({ title: inputTitle });
     container.prepend(newTask);
 
     input.value = '';
